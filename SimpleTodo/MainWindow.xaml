@@ -1,0 +1,62 @@
+﻿<Window x:Name="MainUI" x:Class="SimpleTodo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleTodo"
+        mc:Ignorable="d"
+        Title="SimpleTodo" Height="350" Width="300"
+        AllowsTransparency="True"
+	    WindowStyle="None" 
+	    Opacity="0.6" 
+	    Background="#fbda41"
+	    ShowInTaskbar="False"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <local:BooleanToTextDecorationConverter x:Key="BooleanToTextDecorationConverter"/>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="OptionList">
+            <ListViewItem VerticalAlignment="Center" Margin="0,5,0,5">
+                <Grid Width="265">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" Margin="0,1,2,1" IsChecked="{Binding finished}" Background="#f8df72" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="1" Text="{Binding title}" Foreground="#c04851" VerticalAlignment="Center" TextWrapping="Wrap"
+                               TextDecorations="{Binding Path=finished, Converter={StaticResource BooleanToTextDecorationConverter}}" Margin="2,1,2,1"/>
+                    <Button Grid.Column="2" Content="删除" Background="#b78d12" Foreground="#dfecd5" VerticalAlignment="Center" HorizontalAlignment="Right"
+                            Command="{Binding DataContext.DeleteTodoCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}" Margin="2,1,2,1"/>
+                </Grid>
+            </ListViewItem>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Width="290">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0" Background="#fbda41" ItemsSource="{Binding Todos}" ItemTemplate="{StaticResource OptionList}" HorizontalContentAlignment="Stretch"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="NewTitle" Opacity="0.8" Background="#dfecd5" Foreground="#c04851" Grid.Column="0" Margin="2,2,2,5"
+                     VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+            <Button Opacity="0.8" Background="#b78d12" Foreground="#dfecd5" Grid.Column="1" Content="添加" Margin="2,2,2,2" VerticalAlignment="Center"
+                    Command="{Binding AddNewTodoCommand}" CommandParameter="{Binding ElementName = NewTitle}"/>
+        </Grid>
+    </Grid>
+</Window>
